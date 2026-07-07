@@ -192,6 +192,8 @@ in
       };
     };
 
+    xdg.configFile."helix/themes/vitesse_dark.toml".source = ./vitesse_dark.toml;
+
     home.packages =
       lib.optionals (cfg.languages.typescript.enable || cfg.languages.vue.enable) (with pkgs; [
         eslint-fmt-ts eslint-fmt-tsx typescript-language-server typescript vscode-langservers-extracted eslint_d
