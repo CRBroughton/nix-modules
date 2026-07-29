@@ -21,6 +21,7 @@ in
     ./plugins/flash.nix
     ./plugins/formatting.nix
     ./plugins/harpoon.nix
+    ./plugins/lsp.nix
     ./plugins/telescope.nix
     ./plugins/theme.nix
     ./plugins/which-key.nix
@@ -69,6 +70,7 @@ in
     home.packages = [
       pkgs.lua5_1
       pkgs.lua5_1.pkgs.luarocks
+      pkgs.tree-sitter
     ];
 
     xdg.configFile = lib.mkMerge [
@@ -77,7 +79,6 @@ in
         "nvim/lua/core/options.lua".source = ./core/options.lua;
         "nvim/lua/core/keymaps.lua".source = ./core/keymaps.lua;
         "nvim/lua/plugins/completion.lua".source = ./core/completion.lua;
-        "nvim/lua/plugins/lspconfig.lua".source = ./core/lspconfig.lua;
         "nvim/lua/plugins/treesitter.lua".text = builtins.replaceStrings [ "'__PARSERS__'" ] [
           (lib.concatMapStringsSep ", " (p: "'${p}'") ([ "lua" "vim" "vimdoc" ] ++ cfg.treesitterParsers))
         ] (builtins.readFile ./core/treesitter.lua);
