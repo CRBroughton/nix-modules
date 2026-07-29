@@ -4,7 +4,7 @@ Shared home-manager modules for personal and work devices.
 
 ## Modules
 
-- **helix** — Helix editor with LSP support (TypeScript, Vue, Go, Odin, Nix, Tailwind, UnoCSS)
+- **helix** — Helix editor with LSP support (TypeScript, Vue, Go, Odin, Nix, Tailwind)
 - **zellij** — Zellij terminal multiplexer, Vitesse Dark themed
 - **neovim** — Neovim with lazy.nvim, opt-in LSP languages (TypeScript, Vue, Go, Nix, Tailwind) and plugins (Telescope, Vitesse theme)
 
@@ -88,7 +88,6 @@ programs.helix-modules = {
     odin.enable = false;
     nix.enable = true;
     tailwind.enable = false;
-    unocss.enable = true;
   };
 };
 
@@ -107,7 +106,6 @@ All languages default to `true`. Disable individually:
 | `languages.odin.enable` | Odin (ols) |
 | `languages.nix.enable` | Nix (nixd, nixfmt) |
 | `languages.tailwind.enable` | Tailwind CSS LSP |
-| `languages.unocss.enable` | UnoCSS LSP |
 
 ## Neovim options
 
