@@ -18,6 +18,7 @@ in
     ./languages/vue.nix
     ./languages/tailwind.nix
     ./plugins/bufferline.nix
+    ./plugins/conventional-commit.nix
     ./plugins/flash.nix
     ./plugins/formatting.nix
     ./plugins/harpoon.nix
@@ -42,7 +43,8 @@ in
 
     plugins = {
       bufferline.enable = lib.mkEnableOption "Bufferline (buffer tab bar)";
-      flash.enable      = lib.mkEnableOption "Flash (jump to label)";
+      conventional-commit.enable  = lib.mkEnableOption "Conventional commit picker";
+      flash.enable = lib.mkEnableOption "Flash (jump to label)";
       harpoon.enable    = lib.mkEnableOption "Harpoon 2 (file bookmarks)";
       telescope.enable  = lib.mkEnableOption "Telescope (fuzzy finder)";
       theme.enable      = lib.mkEnableOption "Theme (vitesse)";

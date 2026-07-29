@@ -12,6 +12,9 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
+vim.g.mapleader      = ' '
+vim.g.maplocalleader = ' '
+
 local config_dir = vim.fn.stdpath('config')
 
 for _, file in ipairs(vim.fn.glob(config_dir .. '/lua/core/*.lua', false, true)) do
