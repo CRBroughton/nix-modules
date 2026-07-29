@@ -6,7 +6,7 @@ Shared home-manager modules for personal and work devices.
 
 - **helix** — Helix editor with LSP support (TypeScript, Vue, Go, Odin, Nix, Tailwind)
 - **zellij** — Zellij terminal multiplexer, Vitesse Dark themed
-- **neovim** — Neovim with lazy.nvim, opt-in LSP languages (TypeScript, Vue, Go, Nix, Tailwind) and plugins (Telescope, Vitesse theme)
+- **neovim** — Neovim with lazy.nvim, opt-in LSP languages and plugins
 
 ## Usage
 
@@ -111,14 +111,42 @@ All languages default to `true`. Disable individually:
 
 Everything is opt-in and defaults to `false`.
 
+### Languages
+
+Enabling a language installs its LSP, formatter, and treesitter parser automatically.
+
 | Option | Description |
 |--------|-------------|
-| `languages.nix.enable` | Nix (nil_ls) |
-| `languages.go.enable` | Go (gopls) |
-| `languages.typescript.enable` | TypeScript (ts_ls + eslint) |
-| `languages.vue.enable` | Vue (vue_ls, requires `languages.typescript.enable`) |
+| `languages.typescript.enable` | TypeScript + TSX (ts_ls, eslint_d) |
+| `languages.vue.enable` | Vue 3 (vue_ls — requires `typescript.enable`) |
+| `languages.go.enable` | Go (gopls, goimports) |
+| `languages.nix.enable` | Nix (nil_ls, nixfmt) |
+| `languages.odin.enable` | Odin (ols) |
 | `languages.tailwind.enable` | Tailwind CSS LSP |
-| `plugins.telescope.enable` | Telescope fuzzy finder |
+| `languages.gameboy.enable` | Game Boy assembly (RGBDS, vim-rgbds syntax) |
+
+### Plugins
+
+| Option | Description |
+|--------|-------------|
+| `plugins.bufferline.enable` | Buffer tab bar (`<S-h>`/`<S-l>` to cycle) |
+| `plugins.conventional-commit.enable` | Interactive conventional commit picker (`<leader>gc`) |
+| `plugins.flash.enable` | Jump-to-label motion (`s`, `S`) |
+| `plugins.harpoon.enable` | File bookmarks — harpoon2 (`<leader>h`) |
+| `plugins.telescope.enable` | Fuzzy finder (`<leader>f`) |
 | `plugins.theme.enable` | Vitesse colourscheme |
+| `plugins.which-key.enable` | Keymap popup on `<Space>`, full list via `<leader>?` |
+
+### Core (always active when `enable = true`)
+
+- `mapleader = ' '` (Space)
+- LSP keymaps: `gd` go to definition, `K` hover, `<leader>lr` rename, `<leader>la` code action, `<leader>ld` diagnostics, `[d`/`]d` navigate diagnostics
+- Format on save via conform.nvim (formatters installed per language)
+- `<C-s>` save
+
+### Advanced
+
+| Option | Description |
+|--------|-------------|
 | `extraPlugins` | List of packages providing extra lazy.nvim plugin specs (`pkg.name` / `pkg.src`) |
-| `treesitterParsers` | Extra treesitter parsers to install, on top of `lua`/`vim`/`vimdoc` and whatever the enabled languages request |
+| `treesitterParsers` | Extra treesitter parsers on top of `lua`/`vim`/`vimdoc` and language defaults |
