@@ -12,6 +12,7 @@ in
   imports = [
     ./languages/nix.nix
     ./languages/go.nix
+    ./languages/odin.nix
     ./languages/typescript.nix
     ./languages/vue.nix
     ./languages/tailwind.nix
@@ -28,6 +29,7 @@ in
       tailwind.enable = lib.mkEnableOption "Tailwind (via nix)";
       nix.enable = lib.mkEnableOption "Nix (nil_ls via nix)";
       go.enable = lib.mkEnableOption "Go (gopls via go)";
+      odin.enable = lib.mkEnableOption "Odin (ols via nix)";
     };
 
     plugins = {
