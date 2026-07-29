@@ -17,6 +17,7 @@ in
     ./languages/vue.nix
     ./languages/tailwind.nix
     ./plugins/bufferline.nix
+    ./plugins/flash.nix
     ./plugins/harpoon.nix
     ./plugins/telescope.nix
     ./plugins/theme.nix
@@ -37,6 +38,7 @@ in
 
     plugins = {
       bufferline.enable = lib.mkEnableOption "Bufferline (buffer tab bar)";
+      flash.enable      = lib.mkEnableOption "Flash (jump to label)";
       harpoon.enable    = lib.mkEnableOption "Harpoon 2 (file bookmarks)";
       telescope.enable  = lib.mkEnableOption "Telescope (fuzzy finder)";
       theme.enable      = lib.mkEnableOption "Theme (vitesse)";
