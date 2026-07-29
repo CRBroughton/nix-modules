@@ -14,6 +14,7 @@ in
     xdg.configFile."nvim/lua/core/typescript.lua".source = ./typescript.lua;
 
     home.packages = with pkgs; [
+      eslint_d
       typescript
       typescript-language-server
       vscode-langservers-extracted

@@ -19,6 +19,7 @@ in
     ./languages/tailwind.nix
     ./plugins/bufferline.nix
     ./plugins/flash.nix
+    ./plugins/formatting.nix
     ./plugins/harpoon.nix
     ./plugins/telescope.nix
     ./plugins/theme.nix
