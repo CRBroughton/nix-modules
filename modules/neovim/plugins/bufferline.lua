@@ -12,9 +12,16 @@ return {
             },
         })
 
-        vim.keymap.set('n', '<C-Left>', '<Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous buffer' })
-        vim.keymap.set('n', '<C-Right>', '<Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next buffer' })
-        vim.keymap.set('t', '<C-Left>', '<C-\\><C-n><Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous buffer' })
-        vim.keymap.set('t', '<C-Right>', '<C-\\><C-n><Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next buffer' })
+        vim.keymap.set('n', '<S-h>', '<Cmd>BufferLineCyclePrev<CR>', { silent = true, desc = 'Previous buffer' })
+        vim.keymap.set('n', '<S-l>', '<Cmd>BufferLineCycleNext<CR>', { silent = true, desc = 'Next buffer' })
+
+        local ok, wk = pcall(require, 'which-key')
+        if ok then
+            wk.add({
+                { '<leader>b', group = 'Buffers' },
+                { '<S-h>',     desc = 'Previous buffer' },
+                { '<S-l>',     desc = 'Next buffer' },
+            })
+        end
     end,
 }

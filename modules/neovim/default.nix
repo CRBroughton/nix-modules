@@ -20,6 +20,7 @@ in
     ./plugins/harpoon.nix
     ./plugins/telescope.nix
     ./plugins/theme.nix
+    ./plugins/which-key.nix
   ];
 
   options.programs.neovim-modules = {
@@ -36,9 +37,10 @@ in
 
     plugins = {
       bufferline.enable = lib.mkEnableOption "Bufferline (buffer tab bar)";
-      harpoon.enable = lib.mkEnableOption "Harpoon 2 (file bookmarks)";
-      telescope.enable = lib.mkEnableOption "Telescope (fuzzy finder)";
-      theme.enable = lib.mkEnableOption "Theme (vitesse)";
+      harpoon.enable    = lib.mkEnableOption "Harpoon 2 (file bookmarks)";
+      telescope.enable  = lib.mkEnableOption "Telescope (fuzzy finder)";
+      theme.enable      = lib.mkEnableOption "Theme (vitesse)";
+      which-key.enable  = lib.mkEnableOption "Which-key (keymap popup)";
     };
 
     extraPlugins = lib.mkOption {
@@ -67,6 +69,8 @@ in
     xdg.configFile = lib.mkMerge [
       {
         "nvim/init.lua".source = ./core/init.lua;
+        "nvim/lua/core/options.lua".source = ./core/options.lua;
+        "nvim/lua/core/keymaps.lua".source = ./core/keymaps.lua;
         "nvim/lua/plugins/completion.lua".source = ./core/completion.lua;
         "nvim/lua/plugins/lspconfig.lua".source = ./core/lspconfig.lua;
         "nvim/lua/plugins/treesitter.lua".text = builtins.replaceStrings [ "'__PARSERS__'" ] [

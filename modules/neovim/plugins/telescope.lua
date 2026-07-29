@@ -1,37 +1,42 @@
 return {
-  'nvim-telescope/telescope.nvim',
-  branch = 'master',
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-  },
-  config = function()
-    local telescope = require('telescope')
-    local actions = require('telescope.actions')
+    'nvim-telescope/telescope.nvim',
+    branch = 'master',
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    },
+    config = function()
+        local telescope = require('telescope')
+        local actions = require('telescope.actions')
+        local builtin = require('telescope.builtin')
 
-    telescope.setup({
-      defaults = {
-        mappings = {
-          i = {
-            ['<C-j>'] = actions.move_selection_next,
-            ['<C-k>'] = actions.move_selection_previous,
-            ['<Tab>'] = actions.select_default,
-            ['<C-l>'] = actions.select_default,
-          },
-          n = {
-            ['<C-j>'] = actions.move_selection_next,
-            ['<C-k>'] = actions.move_selection_previous,
-          },
-        },
-      },
-    })
+        telescope.setup({
+            defaults = {
+                mappings = {
+                    i = {
+                        ['<C-j>'] = actions.move_selection_next,
+                        ['<C-k>'] = actions.move_selection_previous,
+                    },
+                },
+            },
+        })
 
-    pcall(telescope.load_extension, 'fzf')
+        pcall(telescope.load_extension, 'fzf')
 
-    local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<C-p>', builtin.find_files, { desc = 'Find file in project' })
-    vim.keymap.set('n', '<C-f>', builtin.current_buffer_fuzzy_find, { desc = 'Find in buffer' })
-    vim.keymap.set('n', '<A-x>', builtin.commands, { desc = 'Command palette' })
-    vim.keymap.set('n', '<C-x>b', builtin.buffers, { desc = 'Switch buffer' })
-  end,
+        vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find file' })
+        vim.keymap.set('n', '<leader>fg', builtin.live_grep,  { desc = 'Live grep' })
+        vim.keymap.set('n', '<leader>fb', builtin.buffers,    { desc = 'Find buffer' })
+        vim.keymap.set('n', '<leader>fr', builtin.oldfiles,   { desc = 'Recent files' })
+
+        local ok, wk = pcall(require, 'which-key')
+        if ok then
+            wk.add({
+                { '<leader>f',  group = 'Find' },
+                { '<leader>ff', desc = 'Find file' },
+                { '<leader>fg', desc = 'Live grep' },
+                { '<leader>fb', desc = 'Find buffer' },
+                { '<leader>fr', desc = 'Recent files' },
+            })
+        end
+    end,
 }
