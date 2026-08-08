@@ -10,6 +10,7 @@ let
 in
 {
   imports = [
+    ./languages/arm.nix
     ./languages/gameboy.nix
     ./languages/nix.nix
     ./languages/go.nix
@@ -36,6 +37,7 @@ in
       vue.enable = lib.mkEnableOption "Vue (vue_ls via nix, requires the typescript plugin to be enabled)";
       tailwind.enable = lib.mkEnableOption "Tailwind (via nix)";
       nix.enable = lib.mkEnableOption "Nix (nil_ls via nix)";
+      arm.enable = lib.mkEnableOption "ARM assembly (asm-lsp via nix)";
       gameboy.enable = lib.mkEnableOption "Game Boy assembly (RGBDS via nix)";
       go.enable = lib.mkEnableOption "Go (gopls via go)";
       odin.enable = lib.mkEnableOption "Odin (ols via nix)";
