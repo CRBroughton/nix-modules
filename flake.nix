@@ -13,6 +13,7 @@
     homeManagerModules = {
       helix  = import ./modules/helix;
       zellij = import ./modules/zellij;
+      neovim = import ./modules/neovim;
     };
   };
 }

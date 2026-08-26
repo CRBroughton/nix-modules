@@ -1,5 +1,8 @@
 {
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.workspace.library": ["${env:HOME}/.nix-profile/share/nvim/runtime/lua"],
     "conventionalCommits.scopes": [
-        "modules"
+        "modules",
+        "docs"
     ]
 }
