@@ -47,6 +47,8 @@ let
     lib.optionals cfg.languages.vue.enable [
       "vls"
       { name = "typescript-language-server"; except-features = [ "format" ]; }
+      "vscode-html-language-server"
+      "vscode-css-language-server"
       "eslint"
     ]
     ++ lib.optionals cfg.languages.tailwind.enable [ "tailwindcss" ]
@@ -140,8 +142,7 @@ in
               command = lib.getExe pkgs.vue-language-server;
               args = [ "--stdio" ];
               config = {
-                typescript.tsdk = "node_modules/typescript/lib";
-                hybridMode = false;
+                typescript.tsdk = "${pkgs.typescript}/lib/node_modules/typescript/lib";
               };
             };
           })
