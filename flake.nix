@@ -18,6 +18,7 @@
 
     nixosModules = {
       factorio-server = import ./modules/factorio-server;
+      terraria-server = import ./modules/terraria-server;
     };
   };
 }
