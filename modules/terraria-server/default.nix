@@ -97,11 +97,12 @@ in
         (delete it to regenerate with a new difficulty). `null` uses the
         server's own default (classic).
 
-        Not a nixpkgs `services.terraria` option — that module has no
-        generic escape hatch for extra CLI flags, so this overrides its
-        computed `ExecStart` to inject `-difficulty`. Fragile against
-        nixpkgs terraria.nix internals changing; re-check this override if
-        upgrading nixpkgs breaks Terraria activation.
+        There is no `-difficulty` CLI flag despite it looking like there
+        should be — TerrariaServer silently ignores unrecognized CLI args,
+        so passing one is a no-op rather than an error. `difficulty=` only
+        exists as a `serverconfig.txt` key, loaded via `-config`; this
+        option's value is written into a generated config file for that
+        reason rather than injected as a flag.
       '';
     };
 
@@ -114,10 +115,6 @@ in
         world file (delete it to regenerate with a new seed). Accepts
         numeric seeds and Terraria's special string seeds (e.g.
         "getfixedboi"). `null` uses a random seed.
-
-        Not a nixpkgs `services.terraria` option — injected into the same
-        `ExecStart` override as `difficulty`, with the same fragility
-        caveat.
       '';
     };
   };
@@ -134,9 +131,13 @@ in
     };
 
     # Reimplements nixpkgs' terraria.nix ExecStart construction (its
-    # `flags`/`tmuxCmd` locals aren't exposed) so `-difficulty`/`-seed` can
-    # be injected — that module has no generic extra-args escape hatch.
-    systemd.services.terraria.serviceConfig.ExecStart = lib.mkIf (cfg.difficulty != null || cfg.worldSeed != null) (
+    # `flags`/`tmuxCmd` locals aren't exposed) so the server can be started
+    # with `-config` instead of individual CLI flags — needed because
+    # `difficulty=`/`seed=` only exist as serverconfig.txt keys, not CLI
+    # flags. Fragile against nixpkgs terraria.nix internals changing;
+    # re-check this override if upgrading nixpkgs breaks Terraria
+    # activation.
+    systemd.services.terraria.serviceConfig.ExecStart =
       let
         difficultyNum = {
           classic = 0;
@@ -145,25 +146,24 @@ in
           journey = 3;
         };
         worldSizeMap = { small = 1; medium = 2; large = 3; };
-        valFlag = name: val:
-          lib.optionalString (val != null) "-${name} \"${lib.escape [ "\\" "\"" ] (toString val)}\"";
-        boolFlag = name: val: lib.optionalString val "-${name}";
-        flags = [
-          (valFlag "port" cfg.port)
-          (valFlag "maxPlayers" cfg.maxPlayers)
-          (valFlag "password" cfg.password)
-          (valFlag "motd" cfg.messageOfTheDay)
-          (valFlag "world" cfg.worldPath)
-          (valFlag "autocreate" worldSizeMap.${cfg.autoCreatedWorldSize})
-          (valFlag "banlist" cfg.banListPath)
-          (boolFlag "secure" cfg.secure)
-          (boolFlag "noupnp" cfg.noUPnP)
-          (valFlag "difficulty" (if cfg.difficulty != null then difficultyNum.${cfg.difficulty} else null))
-          (valFlag "seed" cfg.worldSeed)
-        ];
+        configLine = key: val: lib.optionalString (val != null) "${key}=${toString val}";
+        configFile = pkgs.writeText "terraria-serverconfig.txt" (
+          lib.concatStringsSep "\n" (lib.filter (s: s != "") [
+            (configLine "world" cfg.worldPath)
+            (configLine "autocreate" worldSizeMap.${cfg.autoCreatedWorldSize})
+            (configLine "seed" cfg.worldSeed)
+            (configLine "difficulty" (if cfg.difficulty != null then difficultyNum.${cfg.difficulty} else null))
+            (configLine "maxplayers" cfg.maxPlayers)
+            (configLine "port" cfg.port)
+            (configLine "password" cfg.password)
+            (configLine "motd" cfg.messageOfTheDay)
+            (configLine "banlist" cfg.banListPath)
+            (lib.optionalString cfg.secure "secure=1")
+            "upnp=${if cfg.noUPnP then "0" else "1"}"
+          ])
+        );
         tmuxCmd = "${lib.getExe pkgs.tmux} -S ${lib.escapeShellArg cfg.dataDir}/terraria.sock";
       in
-      lib.mkForce "${tmuxCmd} new -d ${lib.getExe cfg.package} ${lib.concatStringsSep " " flags}"
-    );
+      lib.mkForce "${tmuxCmd} new -d ${lib.getExe cfg.package} -config ${configFile}";
   };
 }

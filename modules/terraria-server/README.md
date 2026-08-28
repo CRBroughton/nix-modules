@@ -46,8 +46,8 @@ Factorio's mod downloads.
 - `openFirewall` — open `port` (TCP+UDP) in the firewall (default `true`).
 - `port` — port to listen on (default `7777`).
 - `maxPlayers` — max players, 1-255 (default `255`).
-- `password` — server password (default `null`, no password). Plaintext CLI
-  argument — visible in the Nix store and process list.
+- `password` — server password (default `null`, no password). Plaintext in
+  the generated `serverconfig.txt`, visible in the Nix store.
 - `messageOfTheDay` — message shown to players on join.
 - `worldPath` — path to a `.wld` world file to load. If missing, a new
   world is auto-created there at `autoCreatedWorldSize`.
@@ -63,6 +63,12 @@ Factorio's mod downloads.
   Accepts numeric seeds and Terraria's special string seeds (e.g.
   `"getfixedboi"`). Same caveat as `difficulty`: only applies at world
   creation.
+
+`difficulty` and `worldSeed` aren't CLI flags — `-difficulty`/`-seed` don't
+exist as command-line arguments (TerrariaServer silently ignores
+unrecognized ones rather than erroring, so this is easy to miss). They're
+`serverconfig.txt` keys, so this module always starts the server with
+`-config <generated file>` rather than individual `-flag value` args.
 
 ## Admin console
 
