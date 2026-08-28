@@ -56,6 +56,13 @@ Factorio's mod downloads.
 - `secure` — additional cheat protection (default `false`).
 - `noUPnP` — disable automatic UPnP (default `false`).
 - `dataDir` — state directory (default `/var/lib/terraria`).
+- `difficulty` — `"classic"` / `"expert"` / `"master"` / `"journey"` (default
+  `null`, server default of classic). Only applies when the world at
+  `worldPath` is first created — no effect on an already-existing world file.
+- `worldSeed` — seed for a newly-created world (default `null`, random).
+  Accepts numeric seeds and Terraria's special string seeds (e.g.
+  `"getfixedboi"`). Same caveat as `difficulty`: only applies at world
+  creation.
 
 ## Admin console
 

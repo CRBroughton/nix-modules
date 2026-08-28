@@ -104,6 +104,22 @@ in
         upgrading nixpkgs breaks Terraria activation.
       '';
     };
+
+    worldSeed = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = ''
+        World seed, applied only when the world at `worldPath` is first
+        created — like `difficulty`, it has no effect on an already-existing
+        world file (delete it to regenerate with a new seed). Accepts
+        numeric seeds and Terraria's special string seeds (e.g.
+        "getfixedboi"). `null` uses a random seed.
+
+        Not a nixpkgs `services.terraria` option — injected into the same
+        `ExecStart` override as `difficulty`, with the same fragility
+        caveat.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -118,16 +134,16 @@ in
     };
 
     # Reimplements nixpkgs' terraria.nix ExecStart construction (its
-    # `flags`/`tmuxCmd` locals aren't exposed) so `-difficulty` can be
-    # injected — that module has no generic extra-args escape hatch.
-    systemd.services.terraria.serviceConfig.ExecStart = lib.mkIf (cfg.difficulty != null) (
+    # `flags`/`tmuxCmd` locals aren't exposed) so `-difficulty`/`-seed` can
+    # be injected — that module has no generic extra-args escape hatch.
+    systemd.services.terraria.serviceConfig.ExecStart = lib.mkIf (cfg.difficulty != null || cfg.worldSeed != null) (
       let
         difficultyNum = {
           classic = 0;
           expert = 1;
           master = 2;
           journey = 3;
-        }.${cfg.difficulty};
+        };
         worldSizeMap = { small = 1; medium = 2; large = 3; };
         valFlag = name: val:
           lib.optionalString (val != null) "-${name} \"${lib.escape [ "\\" "\"" ] (toString val)}\"";
@@ -142,7 +158,8 @@ in
           (valFlag "banlist" cfg.banListPath)
           (boolFlag "secure" cfg.secure)
           (boolFlag "noupnp" cfg.noUPnP)
-          "-difficulty ${toString difficultyNum}"
+          (valFlag "difficulty" (if cfg.difficulty != null then difficultyNum.${cfg.difficulty} else null))
+          (valFlag "seed" cfg.worldSeed)
         ];
         tmuxCmd = "${lib.getExe pkgs.tmux} -S ${lib.escapeShellArg cfg.dataDir}/terraria.sock";
       in
